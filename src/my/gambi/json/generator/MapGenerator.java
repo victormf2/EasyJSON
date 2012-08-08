@@ -5,17 +5,17 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-import my.gambi.ObjectGenerator;
+import my.gambi.json.FromJsonObjectGenerator;
 import my.gambi.exception.ParseException;
 import org.json.JSONObject;
-import static my.gambi.json.JSONGambi.VALUE_PARSER;
 
 /**
  *
  * @author Victor Machado
  */
-public class MapGenerator implements ObjectGenerator {
+public class MapGenerator extends FromJsonObjectGenerator {
     
+    @Override
     public Object generate(Type type, Object value) throws ParseException {
 
         try {
@@ -29,8 +29,8 @@ public class MapGenerator implements ObjectGenerator {
             String[] fieldNames = JSONObject.getNames(jsonObject);
             if (fieldNames != null) {
                 for (String key : fieldNames) {
-                    map.put(VALUE_PARSER.parse(key, keyType),
-                            VALUE_PARSER.parse(jsonObject.get(key), valueType));
+                    map.put(container.convert(key, keyType),
+                            container.convert(jsonObject.get(key), valueType));
                 }
             }
             return map;

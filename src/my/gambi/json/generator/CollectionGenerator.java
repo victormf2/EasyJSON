@@ -8,17 +8,17 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import my.gambi.ObjectGenerator;
+import my.gambi.json.FromJsonObjectGenerator;
 import my.gambi.exception.ParseException;
 import org.json.JSONArray;
-import static my.gambi.json.JSONGambi.VALUE_PARSER;
 
 /**
  *
  * @author Victor Machado
  */
-public class CollectionGenerator implements ObjectGenerator {
+public class CollectionGenerator extends FromJsonObjectGenerator {
 
+    @Override
     public Object generate(Type type, Object value) throws ParseException {
 
         try {
@@ -55,6 +55,6 @@ public class CollectionGenerator implements ObjectGenerator {
 
     private void addObjectToCollection(Collection collection, Object value, Type type)
             throws ParseException {
-        collection.add(VALUE_PARSER.parse(value, type));
+        collection.add(container.convert(value, type));
     }
 }
