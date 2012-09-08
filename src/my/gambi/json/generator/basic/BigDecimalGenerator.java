@@ -2,14 +2,14 @@ package my.gambi.json.generator.basic;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import my.gambi.json.FromJsonObjectGenerator;
+import my.gambi.json.DefaultObjectGenerator;
 import my.gambi.exception.ParseException;
 
 /**
  *
  * @author Victor Machado
  */
-public class BigDecimalGenerator extends FromJsonObjectGenerator {
+public class BigDecimalGenerator extends DefaultObjectGenerator {
 
     @Override
     public Object generate(Type type, Object value) throws ParseException {

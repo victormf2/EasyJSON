@@ -6,8 +6,8 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import my.gambi.json.FromJsonObjectGenerator;
 import my.gambi.exception.ParseException;
+import my.gambi.json.DefaultObjectGenerator;
 import my.gambi.json.generator.basic.BigDecimalGenerator;
 import my.gambi.json.generator.basic.BigIntegerGenerator;
 import my.gambi.json.generator.basic.BooleanGenerator;
@@ -25,12 +25,12 @@ import my.gambi.json.generator.basic.StringGenerator;
  *
  * @author Victor Machado
  */
-public class BasicObjectGenerator extends FromJsonObjectGenerator {
+public class BasicObjectGenerator extends DefaultObjectGenerator {
 
-    private Map<Type, FromJsonObjectGenerator> typeSpecificGenerators;
+    private Map<Type, DefaultObjectGenerator> typeSpecificGenerators;
 
     public BasicObjectGenerator() {
-        typeSpecificGenerators = new HashMap<Type, FromJsonObjectGenerator>();
+        typeSpecificGenerators = new HashMap<>();
         typeSpecificGenerators.put(String.class, new StringGenerator());
         typeSpecificGenerators.put(boolean.class, new BooleanGenerator());
         typeSpecificGenerators.put(Boolean.class, new BooleanGenerator());
@@ -59,7 +59,7 @@ public class BasicObjectGenerator extends FromJsonObjectGenerator {
         if (value == null) {
             return null;
         }
-        FromJsonObjectGenerator objectGenerator = typeSpecificGenerators.get(type);
+        DefaultObjectGenerator objectGenerator = typeSpecificGenerators.get(type);
         return objectGenerator.generate(type, value);
     }
 

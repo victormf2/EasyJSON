@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-import my.gambi.json.FromJsonObjectGenerator;
+import my.gambi.json.DefaultObjectGenerator;
 import my.gambi.exception.ParseException;
 import org.json.JSONObject;
 
@@ -13,7 +13,7 @@ import org.json.JSONObject;
  *
  * @author Victor Machado
  */
-public class MapGenerator extends FromJsonObjectGenerator {
+public class MapGenerator extends DefaultObjectGenerator {
     
     @Override
     public Object generate(Type type, Object value) throws ParseException {

@@ -2,8 +2,8 @@ package my.gambi.json.rule;
 
 import java.lang.reflect.Type;
 import my.gambi.ConversionRule;
+import static my.gambi.utils.TypeAssertion.*;
 import org.json.JSONArray;
-import static  my.gambi.utils.TypeAssertion.*;
 
 /**
  *
@@ -11,7 +11,8 @@ import static  my.gambi.utils.TypeAssertion.*;
  */
 public class JSONArrayConversionRule implements ConversionRule {
 
-    public Object getConversionParameter(Type type, Object value) {
+    @Override
+    public String getGeneratorId(Type type, Object value) {
 
         if (value instanceof JSONArray) {
             if (isArray(type)) {

@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package my.gambi.json;
 
 import java.lang.reflect.Type;
@@ -13,7 +8,7 @@ import my.gambi.exception.ParseException;
  *
  * @author Victor Machado
  */
-public class FromJsonObjectGenerator implements ObjectGenerator {
+public class DefaultObjectGenerator implements ObjectGenerator {
 
     protected ObjectGeneratorContainer container;
 
@@ -25,8 +20,9 @@ public class FromJsonObjectGenerator implements ObjectGenerator {
         this.container = container;
     }
 
+    @Override
     public Object generate(Type type, Object value) throws ParseException {
         throw new ParseException(value, type,
-                new UnsupportedOperationException("Default ObjectGenerator can't do a thing"));
+                new UnsupportedOperationException("DefaultObjectGenerator can't do a thing"));
     }
 }

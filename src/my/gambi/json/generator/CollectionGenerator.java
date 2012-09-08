@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import my.gambi.json.FromJsonObjectGenerator;
+import my.gambi.json.DefaultObjectGenerator;
 import my.gambi.exception.ParseException;
 import org.json.JSONArray;
 
@@ -16,7 +16,7 @@ import org.json.JSONArray;
  *
  * @author Victor Machado
  */
-public class CollectionGenerator extends FromJsonObjectGenerator {
+public class CollectionGenerator extends DefaultObjectGenerator {
 
     @Override
     public Object generate(Type type, Object value) throws ParseException {

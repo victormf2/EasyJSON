@@ -1,15 +1,15 @@
 package my.gambi.json.generator.basic;
 
 import java.lang.reflect.Type;
-import my.gambi.json.FromJsonObjectGenerator;
 import my.gambi.exception.ParseException;
+import my.gambi.json.DefaultObjectGenerator;
 import my.gambi.utils.DateUtils;
 
 /**
  *
  * @author Victor Machado
  */
-public class DateGenerator extends FromJsonObjectGenerator {
+public class DateGenerator extends DefaultObjectGenerator {
 
     @Override
     public Object generate(Type type, Object value) throws ParseException {

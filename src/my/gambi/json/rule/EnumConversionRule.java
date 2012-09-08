@@ -10,7 +10,8 @@ import static my.gambi.utils.TypeAssertion.isEnum;
  */
 public class EnumConversionRule implements ConversionRule {
 
-    public Object getConversionParameter(Type type, Object value) {
+    @Override
+    public String getGeneratorId(Type type, Object value) {
 
         return isEnum(type) && value instanceof String ? "EnumGenerator" : null;
     }
