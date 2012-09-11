@@ -6,6 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import my.gambi.exception.ParseException;
 import my.gambi.json.DefaultObjectGenerator;
+import my.gambi.utils.TypeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -27,7 +28,7 @@ public class ArrayGenerator extends DefaultObjectGenerator {
 
         JSONArray jsonArray = (JSONArray) value;
         int length = jsonArray.length();
-        Object[] array = (Object[]) Array.newInstance(discoverType(componentType), length);
+        Object[] array = (Object[]) Array.newInstance(TypeUtils.getClass(componentType), length);
         for (int i = 0; i < length; i++) {
             try {
                 array[i] = container.convert(jsonArray.get(i), componentType);
@@ -36,18 +37,5 @@ public class ArrayGenerator extends DefaultObjectGenerator {
             }
         }
         return array;
-    }
-
-    public Class discoverType(Type componentType) {
-        
-        if (componentType instanceof GenericArrayType) {
-            GenericArrayType genericArrayType = (GenericArrayType) componentType;
-            return Array.newInstance(
-                    (Class) discoverType(genericArrayType.getGenericComponentType()), 0).getClass();
-        }
-        if (componentType instanceof ParameterizedType) {
-            return (Class) ((ParameterizedType) componentType).getRawType();
-        }
-        return (Class) componentType;
     }
 }

@@ -21,8 +21,8 @@ public class MethodUtils {
         return method.getName().startsWith("set") && method.getParameterTypes().length == 1;
     }
     
-    public static Method setter(String fieldName, Object value, Class clazz) throws NoSuchMethodException {
-        return clazz.getDeclaredMethod(setterName(fieldName), value.getClass());
+    public static Method setter(String fieldName, Class fieldClass, Class clazz) throws NoSuchMethodException {
+        return clazz.getDeclaredMethod(setterName(fieldName), fieldClass);
     }
     
     public static Method getter(String fieldName, Class clazz) throws NoSuchMethodException {

@@ -2,7 +2,7 @@ package my.gambi.json.rule;
 
 import java.lang.reflect.Type;
 import my.gambi.ConversionRule;
-import static my.gambi.utils.TypeAssertion.*;
+import static my.gambi.utils.TypeUtils.*;
 import org.json.JSONArray;
 
 /**

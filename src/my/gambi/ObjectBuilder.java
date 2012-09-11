@@ -7,8 +7,8 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import my.gambi.annotation.JSONField;
-import my.gambi.utils.Intrusiveness;
 import static my.gambi.utils.MethodUtils.*;
+import my.gambi.utils.TypeUtils;
 
 /**
  *
@@ -18,8 +18,7 @@ public class ObjectBuilder {
 
     private Class clazz;
     private Object object;
-    private boolean fieldIntrusive;
-    private boolean methodIntrusive;
+    private MemberAccessControl memberAccessControl;
     private Map<String, Object> jsonFieldMap;
 
     public ObjectBuilder(final Class clazz) throws Exception {
@@ -28,21 +27,17 @@ public class ObjectBuilder {
         putAnnotatedSettersInJsonFieldMap(clazz);
         putAnnotatedFieldsInJsonFieldMap(clazz);
     }
-
-    public boolean isFieldIntrusive() {
-        return fieldIntrusive;
-    }
-
-    public void setFieldIntrusive(boolean fieldIntrusive) {
-        this.fieldIntrusive = fieldIntrusive;
-    }
-
-    public boolean isMethodIntrusive() {
-        return methodIntrusive;
-    }
-
-    public void setMethodIntrusive(boolean methodIntrusive) {
-        this.methodIntrusive = methodIntrusive;
+    
+    public void setMemberAccessControl(Boolean fieldIntrusive, Boolean methodIntrusive) {
+        if (memberAccessControl == null) {
+            memberAccessControl = new MemberAccessControl();
+        }
+        if (fieldIntrusive != null) {
+            memberAccessControl.setFieldIntrusive(fieldIntrusive);
+        }
+        if (methodIntrusive != null) {
+            memberAccessControl.setMethodIntrusive(methodIntrusive);
+        }
     }
 
     public void newInstance() throws Exception {
@@ -64,39 +59,40 @@ public class ObjectBuilder {
         return object;
     }
 
-    public void set(final String fieldName, final Object value) throws Exception {
+    public void set(final String fieldName, final Object fieldValue, final Type fieldType) throws Exception {
 
         Object target = jsonFieldMap.get(fieldName);
+        Class fieldClass = TypeUtils.getClass(fieldType);
         if (target == null) {
             try {
-                target = setter(fieldName, value, clazz);
+                target = setter(fieldName, fieldClass, clazz);
             } catch (NoSuchMethodException exception) {
                 target = clazz.getDeclaredField(fieldName);
             }
         }
 
         if (target instanceof Method) {
-            setWithMethod((Method) target, value);
+            setWithMethod((Method) target, fieldValue);
         } else {
-            setWithField((Field) target, value);
+            setWithField((Field) target, fieldValue, fieldClass);
         }
     }
 
-    private void setWithMethod(Method method, Object value) throws Exception {
-        if (isMethodIntrusive(method)) {
+    private void setWithMethod(Method method, Object fieldValue) throws Exception {
+        if (memberAccessControl.isAccessible(method)) {
             method.setAccessible(true);
         }
-        method.invoke(object, value);
+        method.invoke(object, fieldValue);
     }
 
-    private void setWithField(Field field, Object value) throws Exception {
-        if (isFieldIntrusive(field)) {
+    private void setWithField(Field field, Object fieldValue, Class fieldClass) throws Exception {
+        if (memberAccessControl.isAccessible(field)) {
             field.setAccessible(true);
         }
         if (field.isAccessible()) {
-            field.set(object, value);
+            field.set(object, fieldValue);
         } else {
-            setWithMethod(setter(field.getName(), value, clazz), value);
+            setWithMethod(setter(field.getName(), fieldClass, clazz), fieldValue);
         }
     }
 
@@ -117,7 +113,7 @@ public class ObjectBuilder {
     }
 
     private Type typeFromMethod(Method method) {
-        if (methodIntrusive) {
+        if (memberAccessControl.isAccessible(method)) {
             method.setAccessible(true);
         }
         if (isSetter(method)) {
@@ -127,7 +123,7 @@ public class ObjectBuilder {
     }
 
     private Type typeFromField(Field field) throws NoSuchMethodException {
-        if (fieldIntrusive) {
+        if (memberAccessControl.isAccessible(field)) {
             field.setAccessible(true);
         }
         if (field.isAccessible()) {
@@ -154,29 +150,5 @@ public class ObjectBuilder {
                 jsonFieldMap.put(jsonField.value(), field);
             }
         }
-    }
-
-    private boolean isFieldIntrusive(Field field) {
-        Boolean intrusive = Intrusiveness.isFieldIntrusive(field);
-        if (intrusive != null) {
-            return intrusive;
-        }
-        intrusive = Intrusiveness.isFieldIntrusive(clazz);
-        if (intrusive != null) {
-            return intrusive;
-        }
-        return fieldIntrusive;
-    }
-
-    private boolean isMethodIntrusive(Method method) {
-        Boolean intrusive = Intrusiveness.isMethodIntrusive(method);
-        if (intrusive != null) {
-            return intrusive;
-        }
-        intrusive = Intrusiveness.isMethodIntrusive(clazz);
-        if (intrusive != null) {
-            return intrusive;
-        }
-        return methodIntrusive;
     }
 }

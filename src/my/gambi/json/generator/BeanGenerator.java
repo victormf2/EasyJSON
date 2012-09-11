@@ -37,7 +37,7 @@ public class BeanGenerator extends DefaultObjectGenerator {
                 for (String fieldName : fieldNames) {
                     Object fieldValue = jsonObject.get(fieldName);
                     Type fieldType = builder.getFieldType(fieldName);
-                    builder.set(fieldName, container.convert(fieldValue, fieldType));
+                    builder.set(fieldName, container.convert(fieldValue, fieldType), fieldType);
                 }
             }
             return builder.getObject();
@@ -58,8 +58,7 @@ public class BeanGenerator extends DefaultObjectGenerator {
         ObjectBuilder builder = objectBuilders.get(clazz);
         if (builder == null) {
             builder = new ObjectBuilder(clazz);
-            builder.setFieldIntrusive(fieldIntrusive);
-            builder.setMethodIntrusive(methodIntrusive);
+            builder.setMemberAccessControl(fieldIntrusive, methodIntrusive);
             objectBuilders.put(clazz, builder);
         }
         return builder;
